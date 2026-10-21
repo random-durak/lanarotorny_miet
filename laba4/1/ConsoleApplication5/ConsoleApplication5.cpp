@@ -1,41 +1,67 @@
 #include <stdio.h>
-
-#define N 6
-#define M 8
+#include <stdlib.h>
 #include <locale.h>
-// Функция поиска максимума в верхней левой области и минимума в нижней правой области
-void findValues(int a[N][M], int* max, int* min)
-{
-    setlocale(LC_ALL, "Rus");
-    *max = a[0][0];
-    *min = a[N / 2][M / 2];
-    // Верхняя левая область
-    for (int i = 0; i < N / 2; i++)
-    {
-        for (int j = 0; j < M / 2; j++)
-        {
-            if (a[i][j] > *max)
-                *max = a[i][j];
+
+#define N1 5
+#define N2 7
+
+// функция возвращения указателя на мин элемент массива
+double* findMinPointer(double* arr, int size) {
+    if (size <= 0) return NULL;
+
+    double* min_ptr = &arr[0];
+
+    for (int i = 1; i < size; i++) {
+        if (arr[i] < *min_ptr) {
+            min_ptr = &arr[i]; // адрес нового минимума
         }
     }
-    // Нижняя правая область
-    for (int i = N / 2; i < N; i++)
-    {
-        for (int j = M / 2; j < M; j++)
-        {
-            if (a[i][j] < *min)
-                *min = a[i][j];
-        }
-    }
+    return min_ptr;
 }
-int main()
-{
-    A[i][j] = rand() % 50 + 1; 
-    };
-    int max, min;
-    // Находим максимум и минимум
-    findValues(A, &max, &min);
-    printf("Максимум в верхней области: %d\n", max);
-    printf("Минимум в нижней области: %d\n", min);
+
+int main() {
+    setlocale(LC_ALL, "Rus");
+
+    double A[N1];
+    double B[N2];
+
+    printf("Массив A: ");
+    for (int i = 0; i < N1; i++) {
+        // Формула генерирует случайное дробное число
+        A[i] = ((double)rand() / RAND_MAX) * 50.0;
+        printf("%.2f ", A[i]);
+    }
+    printf("\n");
+
+    printf("Массив B: ");
+    for (int i = 0; i < N2; i++) {
+        B[i] = ((double)rand() / RAND_MAX) * 50.0;
+        printf("%.2f ", B[i]);
+    }
+    printf("\n\n");
+
+    // находим указатели на минимумы
+    double* minPtrA = findMinPointer(A, N1);
+    double* minPtrB = findMinPointer(B, N2);
+
+    // находим индексы
+    int indexA = minPtrA - A;
+    int indexB = minPtrB - B;
+
+    printf("Минимум в A: %.2f (индекс %d)\n", *minPtrA, indexA);
+    printf("Минимум в B: %.2f (индекс %d)\n\n", *minPtrB, indexB);
+
+    // ищем какой минимум ближе к концу массива
+    int distA = (N1 - 1) - indexA;
+    int distB = (N2 - 1) - indexB;
+
+    if (distA < distB) {
+        printf("Минимум в массиве A находится ближе к концу (осталось %d эл. до конца)\n", distA);
+    } else if (distB < distA) {
+        printf("Минимум в массиве B находится ближе к концу (осталось %d эл. до конца)\n", distB);
+    } else {
+        printf("Минимумы в обоих массивах находятся на одинаковом расстоянии от конца (%d эл.)\n", distA);
+    }
+
     return 0;
 }
